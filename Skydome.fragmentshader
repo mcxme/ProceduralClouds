@@ -1,0 +1,55 @@
+#version 330 core
+
+out vec4 color;
+
+varying vec2 TexCoord;
+varying vec3 normal;
+varying vec3 vertex;
+
+uniform vec3 skydomeLightDirection;
+uniform float lightIntensity; // range [0,1]
+uniform vec3 cameraPosition;
+uniform vec3 cameraDirection;
+
+float saturate(float x)
+{
+	float max = (x < 0)? 0 : x;
+	float min = (max < 1)? max : 1;
+	return min;
+}
+
+vec3 saturateV(vec3 v)
+{
+	return vec3(saturate(v.x), saturate(v.y), saturate(v.z));
+}
+
+void main()
+{
+	float transparency = 0;
+	vec3 combinedColor = vec3(0);
+
+	if (TexCoord.y > 0.5)
+	{
+		transparency = 1;
+
+		vec3 upperColor = vec3(0.4,0.4,0.78);
+		vec3 lowerColor = vec3(0.9,0.9,1);
+		vec3 sunsetColor = vec3(0.92,0.17,0.05);
+		vec3 nightColor = vec3(0.05,0,0.1);
+		float nightThreshold = 0.2f;
+
+		vec3 horizontColor = sunsetColor +  sqrt(lightIntensity) * (lowerColor - sunsetColor);
+		if (sqrt(lightIntensity) < nightThreshold) horizontColor = nightColor + (1 / nightThreshold) * sqrt(lightIntensity) * (horizontColor - nightColor);
+		vec3 diffuseColor = upperColor + 2 * (1- TexCoord.y) * (horizontColor - upperColor); // colors from top to horizont
+		vec3 spectralColor = vec3(1,1,1) * pow(saturate(dot(normal, skydomeLightDirection)), 64);
+
+		float lightBrightness = lightIntensity * 0.5;
+		combinedColor = (0.5 + 0.8 * lightBrightness) * diffuseColor + 2 * sqrt(lightBrightness) * spectralColor;
+	}
+	else
+	{
+		discard;
+	}
+
+	color = vec4(combinedColor,transparency);
+}

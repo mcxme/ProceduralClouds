@@ -1,0 +1,30 @@
+#version 330 core
+
+// Input vertex data, different for all executions of this shader.
+layout(location = 10) in vec3 vertexPosition_modelspace;
+layout(location = 11) in vec3 vertexNormal;
+layout(location = 12) in vec2 textureCoordinate;
+
+// Values that stay constant for the whole mesh.
+uniform mat4 skyMVP;
+uniform float time;
+uniform vec3 lightDirection;
+uniform float lightIntensity;
+uniform vec3 cameraPosition;
+
+varying vec2 TexCoord;
+varying vec3 normal;
+varying vec3 vertex;
+
+
+void main()
+{
+
+	normal = vertexNormal;
+	TexCoord = textureCoordinate;
+	vertex = vertexPosition_modelspace;
+
+	gl_Position =  skyMVP * vec4(vertex,1);
+
+}
+
