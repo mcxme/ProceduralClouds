@@ -1,6 +1,9 @@
 The overall idea of this project is to procedurally generate clouds. A full project specification and an in-depth explanation of the implemenation can be found online:
 http://proceduralclouds.blogspot.de/2014/10/project-specification.html
 
+A demonstration is available on YouTube:
+https://www.youtube.com/watch?v=tuxOmMPpg1Y
+
 ----- Setup -----
 
 1. Download the OpenGL-Tutorials from http://www.opengl-tutorial.org/download/
